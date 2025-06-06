@@ -144,4 +144,79 @@ python predict.py
    - 优化模型参数以提升性能
    - 添加模型解释性分析
    - 尝试特征选择方法
-   - 探索其他分类器（如XGBoost、LightGBM等） 
+   - 探索其他分类器（如XGBoost、LightGBM等）
+
+## Web服务与API使用说明
+
+### 1. 启动Flask服务
+
+- 开发环境运行：
+
+```bash
+python app.py
+```
+
+- 生产环境运行（推荐使用gunicorn）：
+
+```bash
+gunicorn -w 4 -b 0.0.0.0:8080 app:app
+```
+
+> 默认端口为8080，如需更改请在`app.py`中修改。
+
+### 2. 访问Web界面
+
+浏览器访问：http://localhost:8080
+
+即可使用可视化的语言检测界面。
+
+### 3. API接口说明
+
+- 检测语言接口：
+
+  - 路由：`POST /api/detect`
+  - 请求体（JSON）：
+    ```json
+    { "text": "待检测的文本" }
+    ```
+  - 返回示例：
+    ```json
+    {
+      "text": "Hello, world!",
+      "language": "en",
+      "language_name": "英语",
+      "status": "success"
+    }
+    ```
+  - curl示例：
+    ```bash
+    curl -X POST http://localhost:8080/api/detect \
+         -H "Content-Type: application/json" \
+         -d '{"text": "Hello, how are you?"}'
+    ```
+
+- 获取支持语言列表：
+
+  - 路由：`GET /api/languages`
+  - 返回示例：
+    ```json
+    {
+      "languages": {
+        "de": "德语",
+        "en": "英语",
+        "es": "西班牙语",
+        "fr": "法语",
+        "it": "意大利语",
+        "nl": "荷兰语"
+      },
+      "status": "success"
+    }
+    ```
+
+### 4. 支持的API路由
+
+| 路由                | 方法   | 说明           |
+|---------------------|--------|----------------|
+| `/`                 | GET    | Web主页        |
+| `/api/detect`       | POST   | 语言检测API    |
+| `/api/languages`    | GET    | 支持语言列表API | 
